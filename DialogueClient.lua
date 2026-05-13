@@ -5,20 +5,7 @@
 	DialogueClient
 	==============
 	local-side controller for the npc shop interaction. one LocalScript
-	handles the whole flow:
-
-	  ProximityPrompt --\
-	                     >--> startShop() ---> Dialogue state, camera tween, ui
-	  RemoteEvent ----/                                   |
-	                                                      v
-	                                            response button clicked
-	                                                      |
-	                              +------------+----------+
-	                              |            |          |
-	                          (number)       "END"      "SHOP"
-	                              |            |          |
-	                              v            v          v
-	                          showLine(n)  endShop()   Shop state, ui swap
+	handles the whole state. (yesyes)
 
 	a small Idle / Dialogue / Shop state machine guards every transition,
 	so we can't end up half-frozen with the ui hidden, etc. the script is
