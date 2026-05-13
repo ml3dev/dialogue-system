@@ -14,9 +14,8 @@
 	the Idle guard turns the prompt-trigger into a no-op.
 ]]
 
--- ---------------------------------------------------------------------------
--- services (cached so no GetService call happens in a hot path)
--- ---------------------------------------------------------------------------
+-- services (cached so no GetService call happens in a path
+
 local Players                = game:GetService("Players")
 local TweenService           = game:GetService("TweenService")
 local ReplicatedStorage      = game:GetService("ReplicatedStorage")
@@ -26,9 +25,8 @@ local UserInputService       = game:GetService("UserInputService")
 local ProximityPromptService = game:GetService("ProximityPromptService")
 local Workspace              = game:GetService("Workspace")
 
--- ---------------------------------------------------------------------------
 -- core references
--- ---------------------------------------------------------------------------
+
 local localPlayer = assert(Players.LocalPlayer, "DialogueClient: no LocalPlayer")
 local camera      = assert(Workspace.CurrentCamera, "DialogueClient: no CurrentCamera")
 
@@ -52,9 +50,8 @@ local responseButtons = { respondBtn1, respondBtn2 }
 DialogueUI.Enabled = false
 ShopUI.Enabled     = false
 
--- ---------------------------------------------------------------------------
 -- audio
--- ---------------------------------------------------------------------------
+
 local GameSFX  = Workspace:WaitForChild("GameSFX")
 local sfxClick = GameSFX:WaitForChild("UIClick") :: Sound
 
@@ -64,15 +61,13 @@ local function playClick()
 	if sfxClick then SoundService:PlayLocalSound(sfxClick) end
 end
 
--- ---------------------------------------------------------------------------
 -- character refs (filled in by bindCharacter, nil during respawn races)
--- ---------------------------------------------------------------------------
+
 local humanoid: Humanoid? = nil
 local hrp:      BasePart? = nil
 
--- ---------------------------------------------------------------------------
 -- tunables
--- ---------------------------------------------------------------------------
+
 local CAMERA = {
 	Distance     = 3,    -- how far behind the player the camera sits (studs)
 	HeightOffset = 3.5,  -- height above the hrp (studs)
@@ -87,19 +82,19 @@ local TYPEWRITER_CPS = 45
 -- us to the dock first if it's going to.
 local PROMPT_GRACE_SECONDS = 0.2
 
--- ---------------------------------------------------------------------------
+
 -- state machine
--- ---------------------------------------------------------------------------
+
 local STATE = { Idle = "Idle", Dialogue = "Dialogue", Shop = "Shop" }
 local current: string = STATE.Idle
 local currentLine = 1
 
--- ---------------------------------------------------------------------------
+
 -- camera controller
 -- exists to cache the active tween so we can :Cancel it cleanly when
 -- the player exits early or triggers a second LookAt before the first
 -- finishes. without that, two tweens fight for the camera every frame.
--- ---------------------------------------------------------------------------
+
 local CameraController = {}
 CameraController.__index = CameraController
 
@@ -144,9 +139,9 @@ end
 
 local cameraCtrl = CameraController.new(camera)
 
--- ---------------------------------------------------------------------------
+
 -- movement freeze + reset button
--- ---------------------------------------------------------------------------
+
 -- closure that knows how to undo freezeMovement, set when freezing.
 local restoreSpeed: (() -> ())? = nil
 
@@ -210,13 +205,15 @@ local function lookAtNPC()
 	cameraCtrl:LookAt(camPos, focus, CAMERA.TweenTime)
 end
 
--- ---------------------------------------------------------------------------
+
 -- dialogue tree
 -- each response's `next` is either a line index, "SHOP", or "END".
 -- adding a branch is just adding an entry and pointing some `next` at it.
--- ---------------------------------------------------------------------------
+
 type Response = { text: string, next: number | string }
 type DialogueLine = { text: string, responses: { Response } }
+
+-- the AMAZINGG dialogue (it is, ok!? ITS GOOD)
 
 local DIALOGUE: { DialogueLine } = {
 	{
@@ -236,11 +233,11 @@ local DIALOGUE: { DialogueLine } = {
 	},
 }
 
--- ---------------------------------------------------------------------------
+
 -- typewriter
 -- token pattern lets a new typewriterPlay invalidate any in-flight one
 -- without having to track / kill the coroutine directly.
--- ---------------------------------------------------------------------------
+
 local typewriterToken = 0
 local fullLineText    = ""
 
@@ -270,9 +267,9 @@ local function isTyping(): boolean
 	return dialogueText.Text ~= fullLineText
 end
 
--- ---------------------------------------------------------------------------
+
 -- ui rendering
--- ---------------------------------------------------------------------------
+
 local function showLine(n: number)
 	local line = DIALOGUE[n]
 	if not line then return end
@@ -293,11 +290,11 @@ local function hideAllUI()
 	ShopUI.Enabled     = false
 end
 
--- ---------------------------------------------------------------------------
+
 -- state transitions
 -- every cleanup path (response, exit button, death, respawn) flows
 -- through endShop, so the unwind logic only lives in one place.
--- ---------------------------------------------------------------------------
+
 local function endShop()
 	if current == STATE.Idle then return end
 	current     = STATE.Idle
@@ -350,9 +347,9 @@ local function handleResponse(index: number)
 	end
 end
 
--- ---------------------------------------------------------------------------
+
 -- input wiring
--- ---------------------------------------------------------------------------
+
 respondBtn1.MouseButton1Click:Connect(function() playClick(); handleResponse(1) end)
 respondBtn2.MouseButton1Click:Connect(function() playClick(); handleResponse(2) end)
 exitButton.MouseButton1Click:Connect(function() playClick(); endShop() end)
