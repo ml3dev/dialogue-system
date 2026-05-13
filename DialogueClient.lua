@@ -373,9 +373,9 @@ UserInputService.InputBegan:Connect(function(input: InputObject, gpe: boolean)
 	end
 end)
 
--- ---------------------------------------------------------------------------
+
 -- character lifecycle
--- ---------------------------------------------------------------------------
+
 local function bindCharacter(char: Model)
 	local hum  = char:WaitForChild("Humanoid") :: Humanoid
 	local root = char:WaitForChild("HumanoidRootPart") :: BasePart
@@ -408,11 +408,11 @@ localPlayer.CharacterAdded:Connect(function(char: Model)
 	cameraCtrl:Restore(humanoid)
 end)
 
--- ---------------------------------------------------------------------------
+
 -- triggers (server remote + proximity prompt)
 -- both paths end at the same startShop / endShop, so the Idle guard
 -- inside startShop makes them safe to coexist.
--- ---------------------------------------------------------------------------
+
 ShopEvent.OnClientEvent:Connect(function(action: string)
 	if action == "EnterShop" then
 		startShop()
@@ -434,10 +434,10 @@ ProximityPromptService.PromptTriggered:Connect(function(prompt: ProximityPrompt,
 	if current == STATE.Idle then startShop() end
 end)
 
--- ---------------------------------------------------------------------------
+
 -- npc idle animation, only while a player is at the shop
 -- driven off the InShop attribute so server systems can plug in too.
--- ---------------------------------------------------------------------------
+
 task.spawn(function()
 	local npc = Workspace:WaitForChild("ShopNPC", 30)
 	if not npc then return end
