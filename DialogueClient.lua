@@ -3,7 +3,7 @@
 
 --[[
 	DialogueClient
-	==============
+	
 	local-side controller for the npc shop interaction. one LocalScript
 	handles the whole state. (yesyes)
 
