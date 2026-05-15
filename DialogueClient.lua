@@ -10,7 +10,7 @@
 	a small Idle / Dialogue / Shop state machine guards every transition,
 	so we can't end up half-frozen with the ui hidden, etc. the script is
 	self-sufficient: even with no server piece the ProximityPrompt path
-	drives the whole conversation. if the server fires EnterShop first,
+	controls the whole conversation. if the server fires EnterShop first,
 	the Idle guard turns the prompt-trigger into a no-op.
 ]]
 
