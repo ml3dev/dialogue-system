@@ -5,7 +5,7 @@
 	DialogueClient
 	
 	local-side controller for the npc shop interaction. one LocalScript
-	handles the whole state. (yesyes)
+	handles the whole state.
 
 	a small Idle / Dialogue / Shop state machine guards every transition,
 	so we can't end up half-frozen with the ui hidden, etc. the script is
@@ -213,7 +213,7 @@ end
 type Response = { text: string, next: number | string }
 type DialogueLine = { text: string, responses: { Response } }
 
--- the AMAZINGG dialogue (it is, ok!? ITS GOOD)
+-- dialogue
 
 local DIALOGUE: { DialogueLine } = {
 	{
